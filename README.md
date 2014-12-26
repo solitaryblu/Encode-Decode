@@ -1,3 +1,3 @@
 Encode-Decode
 =============
-A project that encrypts and decrypts files using a hashkey.
+A project written on Java to encrypt and decrypt files using a hashkey.
