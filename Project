@@ -1,0 +1,249 @@
+import java.io.*;
+import java.io.File;
+    class Project
+     {
+         String FileName, Choice, Password;
+         int len, b, d, n, key, i;
+         char c;
+         Project()
+         {
+             FileName=null; //Accepts file name
+             Choice=null; //Choice entered by the user to Decrypt, Encrypt or Exit
+             Password=null; //Password entered by the user
+             len=0; //Length of the string
+             b=0;
+             d=0;
+             n=0;
+             key=0; //Hash Code of the Password entered by the user.
+             i=0;
+             c=0;
+         }
+         
+    public void Encrypt(String FileName, int key)
+    {
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+         *                                                                  *
+         *  Method to accept a File from the user, encrypt it using         *                                                    *
+         *  a password entered by the user,                                 *
+         *                                                                  *
+         *                                                                  *
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+        FileInputStream inFile;
+        FileOutputStream outFile;
+        System.out.println("Key used "+key);
+        String InputFileName=FileName;
+        String OutputFileName=InputFileName+".enc";
+        System.out.println("Creating File: " +OutputFileName);
+        try
+        {
+            try
+            {
+                inFile = new FileInputStream (InputFileName); //Opening the file entered by the user.
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Input File Not Found.");
+                return;
+            }
+            try
+            {
+                outFile = new FileOutputStream(OutputFileName); 
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Error opening File.");
+                return;
+            }
+        }
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            System.out.println("Out of bounds exception.");
+            return;
+        }
+        try
+        {
+            do
+            {
+                //Each character's ASCII value will be altered as per the key obtained.
+                b=inFile.read();
+                if(b!=-1)
+                {
+                    d=b;
+                    d=d+key;
+                    c=((char)d);
+                }
+                outFile.write(c);
+            }
+            while(b!=-1);
+        }
+        catch(IOException e)
+        {
+            System.out.println("File Error");
+        }
+        try 
+        {
+            inFile.close(); //Closing Input File after Encryption
+        }
+        catch (Exception e) 
+        {
+            System.out.println ("Error closing File.");
+        }
+        try
+        {
+            outFile.close(); //Closing Output file after Encryption
+        }
+        catch (Exception e) 
+        {
+            System.out.println ("Error closing File.");
+        }
+        System.out.println("File Created.");
+    }
+
+    public void Decrypt(String FileName, int key)
+    {
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+         *                                                                  *
+         *  Method to accept a File from the user, decrypt it using         *                                                    *
+         *  a password entered by the user,                                 *
+         *                                                                  *
+         *                                                                  *
+         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+        FileInputStream inFile;
+        FileOutputStream outFile;
+        String Out2;
+        int len, k=0;
+        String OutputFileName=null;
+        String InputFileName=FileName;
+        Out2=InputFileName;
+        try
+        {
+            try
+            {
+                inFile = new FileInputStream (InputFileName); //Opening the file entered by the user.
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Input File Not Found."); 
+                return;
+            }
+            len=Out2.length();
+            //Creating a substring Out2 for the Output File Name.
+            k=0;
+            OutputFileName=(Out2.substring(k,len-4));
+            try
+            {
+                outFile = new FileOutputStream(OutputFileName+".dec");
+            }
+            catch(FileNotFoundException e)
+            {
+                System.out.println("Error opening File.");
+                return;
+            }
+        }
+        catch(ArrayIndexOutOfBoundsException e)
+        {
+            System.out.println("Out of bounds exception");
+            return;
+        }
+        //System.out.println(OutputFileName);
+        System.out.println("Creating File "+OutputFileName+".dec");
+        //Each character's ASCII value will be altered as per the key obtained.
+        try
+        {
+            do
+            {
+                b=inFile.read();
+                if(b!=-1)
+                {
+                    d=b;
+                    d=d+key;
+                    c=((char)d);
+                }
+                outFile.write(c);
+            }
+            while(b!=-1);
+        }
+        catch(IOException e)
+        {
+            System.out.println("File Error");
+        }
+        try 
+        {
+            inFile.close(); //Closing Input File after Encryption
+        }
+        catch (Exception e) 
+        {
+            System.out.println ("Error closing File."); 
+        }
+        try 
+        {
+            outFile.close(); //Closing Output file after Encryption
+        }
+        catch (Exception e) 
+        {
+            System.out.println ("Error closing File."); 
+        }
+
+        System.out.println("File Created.");
+    }
+    public static void main(String args[])throws IOException
+    {
+        //Accepting the File to be encrypted or decrypted, as per user's choice.
+        Project obj = new Project();
+        String FileName=null, Password=null, Choice=null, Answer=null;
+        int key=0, n=-1;
+        InputStreamReader instream = new InputStreamReader(System.in);
+        BufferedReader stdin = new BufferedReader(instream);
+        do
+        {
+            FileName=null; 
+            Password=null; 
+            Choice=null; 
+            do
+            {
+                System.out.println("Enter only numbers: 1 to encode, 2 to decode, 9 to exit: ");
+                try
+                {
+                    Choice=stdin.readLine();
+                    n=Integer.parseInt(Choice);
+                }
+                catch(NumberFormatException nfe)
+                {   
+                    n = -1;
+                    System.out.println("Which part of Enter Only Numbers didn't you get?");
+                    continue;
+                }
+                while(FileName == null)
+                {
+                    System.out.println("Enter file name.");
+                    FileName=stdin.readLine();
+                }
+                while(Password == null)
+                {
+                    System.out.println("Enter a password.");
+                    Password=stdin.readLine();
+                    key=Password.hashCode();
+                }
+                switch(n)
+                {
+                    case 1:
+                    obj.Encrypt(FileName,key);
+                    break;
+                    case 2:
+                    obj.Decrypt(FileName,-key);
+                    break;
+                    case 9:
+                    return;
+                    default:
+                    n = -1;
+                    System.out.println("Invalid input. Please enter again.");
+                    break;
+                }
+            }
+            while(n == -1);
+            System.out.println("Do you want to continue? (Yes/No) ");
+            Answer=stdin.readLine();
+        }
+        while(Answer.equalsIgnoreCase("Yes"));
+    }
+}
